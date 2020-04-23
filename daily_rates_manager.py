@@ -2,13 +2,14 @@ import requests
 import json
 import csv
 import time
-from tredao import HistoricalRatesTable
+from trade_dao import HistoricalRatesTable
+import util
 
 daily_rates_path = "daily_rates/"
 key = "Time Series (Daily)"
 
 
-def fetchTodayRates(sym):
+def store_todays_rates(sym):
     site = "https://www.alphavantage.co/query?"
     function = "function=TIME_SERIES_DAILY"
     symbol = "&symbol=" + sym
@@ -26,7 +27,7 @@ def fetchTodayRates(sym):
             json.dump(daily, outfile)
 
 
-def getTodayRates(sym):
+def get_todays_rates(sym):
     site = "https://www.alphavantage.co/query?"
     function = "function=TIME_SERIES_DAILY"
     symbol = "&symbol=" + sym
@@ -63,7 +64,7 @@ def getTodayRates(sym):
     )
 
 
-def getStoredSymbols():
+def get_stored_symbols():
     from os import listdir
     from os.path import isfile, join
 
@@ -71,10 +72,11 @@ def getStoredSymbols():
     return files
 
 
-def toHrt(symbol, row):
+def convert_to_hrt(symbol, date, row):
     hrt = HistoricalRatesTable()
 
     hrt.symbol = symbol
+    hrt.date = util.fromisoformat(date)
     hrt.data0 = row["1. open"]
     hrt.data1 = row["2. high"]
     hrt.data2 = row["3. low"]
@@ -84,23 +86,23 @@ def toHrt(symbol, row):
     return hrt
 
 
-def getHrtForAllSymbols():
+def get_all_symbols_as_hrt():
     hrts = []
-    for f in getStoredSymbols():
+    for f in get_stored_symbols():
         symbol = f.split(".")[0]
         with open(daily_rates_path + f) as jfile:
             data = json.load(jfile)
             if key in data:
                 for k in data[key]:
-                    hrts.append(toHrt(symbol, data[key][k]))
+                    hrts.append(convert_to_hrt(symbol, k, data[key][k]))
 
     return hrts
 
 
-def fetchAllSymbols(getStoredSymbols, fetchTodayRates):
+def store_all_symbols():
     with open("nasdaqlisted.csv", newline="") as csvfile:
         reader = csv.DictReader(csvfile, delimiter="|")
-        existing_files = getStoredSymbols()
+        existing_files = get_stored_symbols()
 
         i = 0
         for row in reader:
@@ -108,7 +110,7 @@ def fetchAllSymbols(getStoredSymbols, fetchTodayRates):
 
             if sym + ".json" not in existing_files:
                 print("Fetching ", sym)
-                fetchTodayRates(sym)
+                store_todays_rates(sym)
                 i += 1
 
                 if i % 5 == 0:
@@ -117,6 +119,6 @@ def fetchAllSymbols(getStoredSymbols, fetchTodayRates):
                 print("Symbol ", sym, " already exists. Skiping.")
 
 
-# fetchAllSymbols(getStoredSymbols, fetchTodayRates)
+# store_all_symbols(get_stored_symbols, store_todays_rates)
 
 # getAllSymbols()[0].symbol
