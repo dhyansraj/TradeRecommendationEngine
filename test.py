@@ -1,68 +1,38 @@
-import trade_dao
-import numpy as np
+import tensorflow as tf
+import dataset_manager as dm
+import os
 
-PIXEL_WIDTH = 28
-PIXEL_HEIGHT = 28
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
+pixels, labels, dates = dm.get_dataset()
 
-def process_pixel(pixel):
-    rpixel = [ele for ele in reversed(pixel)]
-
-    for i, row in enumerate(rpixel):
-        if i == len(pixel) - 1:
-            break
-
-        for j, col in enumerate(row):
-
-            p = rpixel[i][j]
-            t = rpixel[i + 1][j]
-
-            if t == 0:
-                rpixel[i][j] = 0
-            else:
-                rpixel[i][j] = (t - p) / p
-
-    pixel[0] = [0] * PIXEL_WIDTH
-
-    return pixel
+train_pixels, test_pixels = pixels[:30000], pixels[30000:]
+train_labels, test_labels = labels[:30000], labels[30000:]
 
 
-def get_as_pixel(tres):
-    matrix = []
-    for i, tre in enumerate(tres):
-        matrix.append([getattr(tre, "data" + str(j)) for j in range(0, PIXEL_WIDTH)])
+# print(pixels.shape)
 
-    return np.array(matrix)
+# print(labels.shape)
 
+model = tf.keras.models.Sequential(
+    [
+        tf.keras.layers.Flatten(input_shape=(28, 28)),
+        tf.keras.layers.Dense(128, activation="tanh"),
+        tf.keras.layers.Dense(2),
+    ]
+)
 
-def get_symbol_as_pixels(tres):
-    all_pixels = np.zeros(shape=(1, PIXEL_HEIGHT, PIXEL_WIDTH))
-    all_labels = []
-    all_dates = []
+predictions = model(train_pixels[:1]).numpy()
+predictions
 
-    rtres = [ele for ele in reversed(tres)]
+tf.nn.softmax(predictions).numpy()
 
-    for i, _ in enumerate(rtres):
-        if i == 0:
-            continue
+loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
-        if i + PIXEL_HEIGHT + 1 < len(rtres):
-            c = rtres[i].data3  # Current Day's closing rate
-            n = rtres[i - 1].data3  # Next Day's closing rate
+loss_fn(train_labels[:1], predictions).numpy()
 
-            all_labels.append("B" if n > c else "S")
+model.compile(optimizer="adam", loss=loss_fn, metrics=["accuracy"])
 
-            pixel = get_as_pixel(rtres[i : i + PIXEL_HEIGHT])
+model.fit(train_pixels, train_labels, epochs=5)
 
-            all_pixels = np.append(all_pixels, [process_pixel(pixel)], axis=0)
-
-            all_dates.append(rtres[i].date)
-
-    return np.delete(all_pixels, 0, axis=0), all_labels, all_dates
-
-
-# [i.date for i in trade_dao.get_records("IBM")]
-
-pixels, labels, dates = get_symbol_as_pixels(trade_dao.get_records("IBM"))
-
-print(dates, labels)
+model.evaluate(test_pixels, test_labels, verbose=2)
