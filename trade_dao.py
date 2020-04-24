@@ -18,46 +18,46 @@ class HistoricalRatesTable(Base):
     id = Column(Integer, primary_key=True)
     date = Column(Date)
     symbol = Column(String(16))
-    data0 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data1 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data2 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data3 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data4 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data5 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data6 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data7 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data8 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data9 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data10 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data11 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data12 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data13 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data14 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data15 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data16 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data17 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data18 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data19 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data20 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data21 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data22 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data23 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data24 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data25 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data26 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data27 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data28 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data29 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data30 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data31 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data32 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data33 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data34 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data35 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data36 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data37 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data38 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
-    data39 = Column(Numeric(15, 2, asdecimal=False), default=0.0)
+    data0 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data1 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data2 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data3 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data4 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data5 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data6 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data7 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data8 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data9 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data10 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data11 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data12 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data13 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data14 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data15 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data16 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data17 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data18 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data19 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data20 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data21 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data22 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data23 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data24 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data25 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data26 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data27 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data28 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data29 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data30 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data31 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data32 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data33 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data34 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data35 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data36 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data37 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data38 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+    data39 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
 
 
 def create_table():
@@ -87,6 +87,21 @@ def update_record(hrt):
     try:
         session.merge(hrt)
         session.commit()
+    except SQLAlchemyError as e:
+        print(e)
+    finally:
+        session.close()
+
+
+def get_all_records():
+    Session = sessionmaker()
+    Session.configure(bind=engine)
+    session = Session()
+
+    try:
+        row = session.query(HistoricalRatesTable)
+
+        return row.all()
     except SQLAlchemyError as e:
         print(e)
     finally:
@@ -149,3 +164,10 @@ def get_unique_record(symbol, date):
         print(e)
     finally:
         session.close()
+
+
+# create_table()
+
+# {(str(i.symbol) + ":" + str(i.date), i) for i in get_all_records()]
+
+# {str(i.symbol) + ":" + str(i.date):i for i in get_all_records()}
