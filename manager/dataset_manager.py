@@ -1,8 +1,8 @@
 import trade_dao as dao
 import numpy as np
 
-PIXEL_WIDTH = 28
-PIXEL_HEIGHT = 28
+PIXEL_WIDTH = 30
+PIXEL_HEIGHT = 30
 
 
 def process_pixel(pixel):

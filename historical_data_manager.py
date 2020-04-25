@@ -30,17 +30,28 @@ def store_all_symbols_on_disk():
 
 def store_all_symbols_on_db():
 
+    print("daily_rates_manager.store_all_symbols_on_db()")
     daily_rates_manager.store_all_symbols_on_db()
 
+    print("adx_manager.store_all_symbols_on_db()")
     adx_manager.store_all_symbols_on_db()
+    print("aroon_manager.store_all_symbols_on_db()")
     aroon_manager.store_all_symbols_on_db()
+    print("bbands_manager.store_all_symbols_on_db()")
     bbands_manager.store_all_symbols_on_db()
+    print("cci_manager.store_all_symbols_on_db()")
     cci_manager.store_all_symbols_on_db()
+    print("sma_manager.store_all_symbols_on_db()")
     sma_manager.store_all_symbols_on_db()
+    print("stoch_manager.store_all_symbols_on_db()")
     stoch_manager.store_all_symbols_on_db()
+    print("ema_manager.store_all_symbols_on_db()")
     ema_manager.store_all_symbols_on_db()
+    print("macd_manager.store_all_symbols_on_db()")
     macd_manager.store_all_symbols_on_db()
+    print("obv_manager.store_all_symbols_on_db()")
     obv_manager.store_all_symbols_on_db()
+    print("rsi_manager.store_all_symbols_on_db()")
     rsi_manager.store_all_symbols_on_db()
 
 
@@ -91,7 +102,9 @@ if __name__ == "__main__":
 
     start = datetime.now()
 
-    main()
+    # main()
+
+    store_all_symbols_on_db()
 
     end = datetime.now()
 

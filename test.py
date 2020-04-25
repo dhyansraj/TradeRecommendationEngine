@@ -1,5 +1,5 @@
 import tensorflow as tf
-import dataset_manager as dm
+import manager.dataset_manager as dm
 import os
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -16,7 +16,7 @@ train_labels, test_labels = labels[:30000], labels[30000:]
 
 model = tf.keras.models.Sequential(
     [
-        tf.keras.layers.Flatten(input_shape=(28, 28)),
+        tf.keras.layers.Flatten(input_shape=(dm.PIXEL_HEIGHT, dm.PIXEL_WIDTH)),
         tf.keras.layers.Dense(128, activation="tanh"),
         tf.keras.layers.Dense(2),
     ]
