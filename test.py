@@ -1,38 +1,15 @@
-import tensorflow as tf
-import manager.dataset_manager as dm
-import os
+import pymongo
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+myclient = pymongo.MongoClient("mongodb://admin:admin@localhost:27017/")
+mydb = myclient["mydatabase"]
+mycol = mydb["customers"]
 
-pixels, labels, dates = dm.get_dataset()
+# mydict = {"_id": "test:123", "name": "John", "address": "Highway 37"}
 
-train_pixels, test_pixels = pixels[:30000], pixels[30000:]
-train_labels, test_labels = labels[:30000], labels[30000:]
+# x = mycol.insert_one(mydict)
 
 
-# print(pixels.shape)
+myquery = {"_id": "test:123"}
+newvalues = {"$set": {"zip": "08816"}}
 
-# print(labels.shape)
-
-model = tf.keras.models.Sequential(
-    [
-        tf.keras.layers.Flatten(input_shape=(dm.PIXEL_HEIGHT, dm.PIXEL_WIDTH)),
-        tf.keras.layers.Dense(128, activation="tanh"),
-        tf.keras.layers.Dense(2),
-    ]
-)
-
-predictions = model(train_pixels[:1]).numpy()
-predictions
-
-tf.nn.softmax(predictions).numpy()
-
-loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-
-loss_fn(train_labels[:1], predictions).numpy()
-
-model.compile(optimizer="adam", loss=loss_fn, metrics=["accuracy"])
-
-model.fit(train_pixels, train_labels, epochs=5)
-
-model.evaluate(test_pixels, test_labels, verbose=2)
+mycol.update_one(myquery, newvalues)

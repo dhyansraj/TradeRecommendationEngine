@@ -55,10 +55,10 @@ def store_all_symbols_on_disk():
 
 def store_all_symbols_on_db():
 
-    close_manager.store_all_symbols_on_db()
+    close_manager.store_all_symbols_on_db(close_manager.get_all_symbols_from_disk())
 
-    open_manager.store_all_symbols_on_db()
+    open_manager.store_all_symbols_on_db(open_manager.get_all_symbols_from_disk())
 
-    high_manager.store_all_symbols_on_db()
+    high_manager.store_all_symbols_on_db(high_manager.get_all_symbols_from_disk())
 
-    low_manager.store_all_symbols_on_db()
+    low_manager.store_all_symbols_on_db(low_manager.get_all_symbols_from_disk())

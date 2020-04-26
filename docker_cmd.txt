@@ -1,0 +1,5 @@
+
+MySQL
+
+docker run --name trade-mysql --rm -v $(pwd)/datadir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=TRE -e MYSQL_USER=tre -e MYSQL_PASSWORD=admin -p 3306:3306 -d mysql:5.7
+

@@ -19,4 +19,4 @@ def store_all_symbols_on_disk():
 
 
 def store_all_symbols_on_db():
-    manager.store_all_symbols_on_db(True)
+    manager.store_all_symbols_on_db(manager.get_all_symbols_from_disk(), True)

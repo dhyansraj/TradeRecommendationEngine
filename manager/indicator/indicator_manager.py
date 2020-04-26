@@ -2,7 +2,6 @@ import requests
 import json
 import csv
 import time
-from trade_dao import HistoricalRatesTable
 import trade_dao as dao
 import util
 import os
@@ -48,16 +47,16 @@ class IndicatorManager:
         files = [f for f in listdir(self.store_at) if isfile(join(self.store_at, f))]
         return files
 
-    def convert_to_hrt(self, symbol, date, row):
-        hrt = HistoricalRatesTable()
+    # def convert_to_hrt(self, symbol, date, row):
+    #     hrt = HistoricalRatesTable()
 
-        hrt.symbol = symbol
-        hrt.date = util.fromisoformat(date)
+    #     hrt.symbol = symbol
+    #     hrt.date = util.fromisoformat(date)
 
-        for k in self.data:
-            setattr(hrt, k, row[self.data[k]])
+    #     for k in self.data:
+    #         setattr(hrt, k, row[self.data[k]])
 
-        return hrt
+    #     return hrt
 
     def get_all_symbols_as_hrt(self):
         hrts = []
@@ -70,6 +69,36 @@ class IndicatorManager:
                         hrts.append(self.convert_to_hrt(symbol, k, data[self.key][k]))
 
         return hrts
+
+    def clean_data(self, symbol, date, row):
+        data = {}
+
+        data["_id"] = symbol + ":" + date
+        data["symbol"] = symbol
+        data["date"] = date
+
+        for k in self.data:
+            data[k] = float(row[self.data[k]])
+
+        return data
+
+    def get_symbol_data(self, data, symbol):
+        symbol_data = []
+        if self.key in data:
+            for k in data[self.key]:
+                symbol_data.append(self.clean_data(symbol, k, data[self.key][k]))
+
+        return symbol_data
+
+    def get_all_symbols_from_disk(self):
+        all_symbols = []
+        for f in self.get_stored_symbols():
+            symbol = f.split(".")[0]
+            with open(self.store_at + f) as jfile:
+                data = json.load(jfile)
+
+                all_symbols.extend(self.get_symbol_data(data, symbol))
+        return all_symbols
 
     def store_all_symbols_on_disk(self):
         with open("nasdaqlisted.csv", newline="") as csvfile:
@@ -90,19 +119,17 @@ class IndicatorManager:
                 else:
                     print("Symbol ", sym, " already exists. Skiping.")
 
-    def store_all_symbols_on_db(self, daily_rates=False):
-        hrts = self.get_all_symbols_as_hrt()
-        ehrts = {str(i.symbol) + ":" + str(i.date): i for i in dao.get_all_records()}
-        for hrt in hrts:
-            ehrt = ehrts.get(hrt.symbol + ":" + str(hrt.date))
-            if daily_rates and ehrt:
-                continue
-            elif daily_rates:
-                dao.create_record(hrt)
-            elif ehrt:
-                for k in self.data:
-                    setattr(ehrt, k, getattr(hrt, k))
-                    dao.update_record(ehrt)
+    def store_all_symbols_on_db(self, all_symbols, daily_rates=False):
+
+        if daily_rates:
+            dao.create_record(all_symbols)
+        else:
+            existing_records = set([i["_id"] for i in dao.get_all_records()])
+            all_symbols = list(
+                filter(lambda x: x["_id"] in existing_records, all_symbols)
+            )
+            for record in all_symbols:
+                dao.update_record(record)
 
 
 # store_all_symbols()
@@ -121,4 +148,45 @@ class IndicatorManager:
 
 # print(rsi_manager.get_all_symbols_as_hrt()[0].date)
 
-print(dao.get_records("AAA"))
+# print(dao.get_records("AAA"))
+
+
+# manager = IndicatorManager(
+#     "daily_rates",
+#     "5B2SMYIVORAAHUVQ",
+#     "Time Series (Daily)",
+#     "function=TIME_SERIES_DAILY",
+#     data0="1. open",
+#     data1="2. high",
+#     data2="3. low",
+#     data3="4. close",
+#     data4="5. volume",
+# )
+
+# manager.store_all_symbols_on_db(manager.get_all_symbols_from_disk(), True)
+# manager.get_all_symbols_from_disk()[0]
+
+
+# manager = IndicatorManager(
+#     "adx",
+#     "MOARBV4V30DX6V4O",
+#     "Technical Analysis: ADX",
+#     "function=ADX&interval=daily&time_period=200",
+#     data13="ADX",
+# )
+# # e = {"_id": "LNT:2020-04-23", "symbol": "LNT", "date": "2020-04-23", "data13": 6.0011}
+
+# manager.get_all_symbols_from_disk()[0]
+
+# list(filter(lambda x: x["_id"] in er, manager.get_all_symbols_from_disk()))[0]
+
+# manager = IndicatorManager(
+#     "aroon",
+#     "YNECR52IM6Y24UD4",
+#     "Technical Analysis: AROON",
+#     "function=AROON&interval=daily&time_period=200",
+#     data15="Aroon Up",
+#     data16="Aroon Down",
+# )
+
+# manager.store_all_symbols_on_db(manager.get_all_symbols_from_disk())

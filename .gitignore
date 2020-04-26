@@ -1,3 +1,5 @@
 **/__pycache__/
 /datadir/
 /nohup.out
+/mongo/
+/.ipynb_checkpoints/

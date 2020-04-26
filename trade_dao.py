@@ -1,169 +1,99 @@
 from util import fromisoformat
+import pymongo
 
-from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Date, Numeric, desc
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.engine.url import URL
-
-db_uri = "mysql://tre:admin@127.0.0.1/TRE"
-engine = create_engine(db_uri)
-
-Base = declarative_base()
-
-# Declare a table
-class HistoricalRatesTable(Base):
-    __tablename__ = "HistoricalRates"
-    id = Column(Integer, primary_key=True)
-    date = Column(Date)
-    symbol = Column(String(16))
-    data0 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data1 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data2 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data3 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data4 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data5 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data6 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data7 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data8 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data9 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data10 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data11 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data12 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data13 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data14 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data15 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data16 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data17 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data18 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data19 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data20 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data21 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data22 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data23 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data24 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data25 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data26 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data27 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data28 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data29 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data30 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data31 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data32 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data33 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data34 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data35 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data36 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data37 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data38 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
-    data39 = Column(Numeric(15, 4, asdecimal=False), default=0.0)
+mdb_client = pymongo.MongoClient("mongodb://admin:admin@localhost:27017/")
+db = mdb_client["tre_database"]
+hd = db["historical_data"]
 
 
-def create_table():
-    """Create HistoricalRatesTable. """
-    Base.metadata.create_all(bind=engine)
-
-
-def create_record(hrt):
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = Session()
-
+def create_record(data):
     try:
-        session.add(hrt)
-        session.commit()
-    except SQLAlchemyError as e:
-        print(e)
-    finally:
-        session.close()
+        hd.insert_many(data)
+    except pymongo.errors.BulkWriteError:
+        pass
 
 
-def update_record(hrt):
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = Session()
+def update_record(record):
 
-    try:
-        session.merge(hrt)
-        session.commit()
-    except SQLAlchemyError as e:
-        print(e)
-    finally:
-        session.close()
+    query = {}
+
+    query["_id"] = record.pop("_id")
+
+    values = {"$set": record}
+
+    hd.update_one(query, values)
 
 
 def get_all_records():
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = Session()
 
-    try:
-        row = session.query(HistoricalRatesTable)
-
-        return row.all()
-    except SQLAlchemyError as e:
-        print(e)
-    finally:
-        session.close()
+    return list(hd.find())
 
 
 def get_records(symbol):
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = Session()
-
-    try:
-        row = (
-            session.query(HistoricalRatesTable)
-            .filter(HistoricalRatesTable.symbol == symbol)
-            .order_by(HistoricalRatesTable.date.desc())
-        )
-
-        return row.all()
-    except SQLAlchemyError as e:
-        print(e)
-    finally:
-        session.close()
+    query = {"symbol": {"$eq": symbol}}
+    return list(hd.find(query).sort("date", -1))
 
 
 def get_symbols_list():
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = Session()
-
-    try:
-        row = (
-            session.query(HistoricalRatesTable.symbol)
-            .distinct(HistoricalRatesTable.symbol)
-            .group_by(HistoricalRatesTable.symbol)
-        )
-
-        return row.all()
-    except SQLAlchemyError as e:
-        print(e)
-    finally:
-        session.close()
+    return list(hd.find({}, {"symbol": 1}).distinct("symbol"))
 
 
-def get_unique_record(symbol, date):
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = Session()
+# def get_records(symbol):
+#     Session = sessionmaker()
+#     Session.configure(bind=engine)
+#     session = Session()
 
-    try:
-        row = (
-            session.query(HistoricalRatesTable)
-            .filter(HistoricalRatesTable.symbol == symbol)
-            .filter(HistoricalRatesTable.date == date)
-            .first()
-        )
+#     try:
+#         row = (
+#             session.query(HistoricalRatesTable)
+#             .filter(HistoricalRatesTable.symbol == symbol)
+#             .order_by(HistoricalRatesTable.date.desc())
+#         )
 
-        return row
-    except SQLAlchemyError as e:
-        print(e)
-    finally:
-        session.close()
+#         return row.all()
+#     except SQLAlchemyError as e:
+#         print(e)
+#     finally:
+#         session.close()
+
+
+# def get_symbols_list():
+#     Session = sessionmaker()
+#     Session.configure(bind=engine)
+#     session = Session()
+
+#     try:
+#         row = (
+#             session.query(HistoricalRatesTable.symbol)
+#             .distinct(HistoricalRatesTable.symbol)
+#             .group_by(HistoricalRatesTable.symbol)
+#         )
+
+#         return row.all()
+#     except SQLAlchemyError as e:
+#         print(e)
+#     finally:
+#         session.close()
+
+
+# def get_unique_record(symbol, date):
+#     Session = sessionmaker()
+#     Session.configure(bind=engine)
+#     session = Session()
+
+#     try:
+#         row = (
+#             session.query(HistoricalRatesTable)
+#             .filter(HistoricalRatesTable.symbol == symbol)
+#             .filter(HistoricalRatesTable.date == date)
+#             .first()
+#         )
+
+#         return row
+#     except SQLAlchemyError as e:
+#         print(e)
+#     finally:
+#         session.close()
 
 
 # create_table()
@@ -171,3 +101,7 @@ def get_unique_record(symbol, date):
 # {(str(i.symbol) + ":" + str(i.date), i) for i in get_all_records()]
 
 # {str(i.symbol) + ":" + str(i.date):i for i in get_all_records()}
+
+# get_records("AAPL")[99]
+
+# print(len(get_symbols_list()))
