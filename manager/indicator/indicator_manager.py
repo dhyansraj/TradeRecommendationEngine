@@ -21,8 +21,7 @@ class IndicatorManager:
         except OSError:
             pass
 
-    def store(self, sym):
-
+    def download_data(self, sym):
         symbol = "&symbol=" + sym
 
         url = IndicatorManager.site + self.function + symbol + self.apiKey
@@ -31,13 +30,17 @@ class IndicatorManager:
 
         response = requests.get(url)
 
-        daily = json.loads(response.content.decode("utf-8"))
+        return json.loads(response.content.decode("utf-8"))
 
-        if self.key in daily:
+    def store(self, sym):
+
+        downloaded_data = self.download_data(sym)
+
+        if self.key in downloaded_data:
             with open(self.store_at + sym + ".json", "w") as outfile:
-                json.dump(daily, outfile)
+                json.dump(downloaded_data, outfile)
         else:
-            print(daily)
+            print(downloaded_data)
 
     def get_stored_symbols(self):
         from os import listdir
@@ -94,6 +97,21 @@ class IndicatorManager:
                         time.sleep(60)
                 else:
                     print("Symbol ", sym, " already exists. Skiping.")
+
+    def store_all_symbols_on_db_live(self, daily_rates=False):
+        with open("nasdaqlisted.csv", newline="") as csvfile:
+            reader = csv.DictReader(csvfile, delimiter="|")
+            i = 0
+            for row in reader:
+                sym = row["Symbol"]
+
+                self.store_all_symbols_on_db(
+                    self.get_symbol_data(self.download_data(sym), sym), daily_rates
+                )
+                i += 1
+
+                if i % 5 == 0:
+                    time.sleep(60)
 
     def store_all_symbols_on_db(self, all_symbols, daily_rates=False):
 

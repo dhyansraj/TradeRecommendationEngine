@@ -63,37 +63,37 @@ def main():
         indicator = int(sys.argv[1])
 
     if indicator == 1:
-        daily_rates_manager.store_all_symbols_on_disk()
+        daily_rates_manager.store_all_symbols_on_db()
 
     if indicator == 2:
-        adx_manager.store_all_symbols_on_disk()
+        adx_manager.store_all_symbols_on_db()
 
     if indicator == 3:
-        aroon_manager.store_all_symbols_on_disk()
+        aroon_manager.store_all_symbols_on_db()
 
     if indicator == 4:
-        bbands_manager.store_all_symbols_on_disk()
+        bbands_manager.store_all_symbols_on_db()
 
     if indicator == 5:
-        cci_manager.store_all_symbols_on_disk()
+        cci_manager.store_all_symbols_on_db()
 
     if indicator == 6:
-        sma_manager.store_all_symbols_on_disk()
+        sma_manager.store_all_symbols_on_db()
 
     if indicator == 7:
-        ema_manager.store_all_symbols_on_disk()
+        ema_manager.store_all_symbols_on_db()
 
     if indicator == 8:
-        macd_manager.store_all_symbols_on_disk()
+        macd_manager.store_all_symbols_on_db()
 
     if indicator == 9:
-        stoch_manager.store_all_symbols_on_disk()
+        stoch_manager.store_all_symbols_on_db()
 
     if indicator == 10:
-        obv_manager.store_all_symbols_on_disk()
+        obv_manager.store_all_symbols_on_db()
 
     if indicator == 11:
-        rsi_manager.store_all_symbols_on_disk()
+        rsi_manager.store_all_symbols_on_db()
 
 
 if __name__ == "__main__":
@@ -102,9 +102,9 @@ if __name__ == "__main__":
 
     start = datetime.now()
 
-    # main()
+    main()
 
-    store_all_symbols_on_db()
+    # store_all_symbols_on_db()
 
     end = datetime.now()
 
