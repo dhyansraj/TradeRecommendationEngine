@@ -3,7 +3,6 @@ import json
 import csv
 import time
 import trade_dao as dao
-import util
 import os
 
 
@@ -46,29 +45,6 @@ class IndicatorManager:
 
         files = [f for f in listdir(self.store_at) if isfile(join(self.store_at, f))]
         return files
-
-    # def convert_to_hrt(self, symbol, date, row):
-    #     hrt = HistoricalRatesTable()
-
-    #     hrt.symbol = symbol
-    #     hrt.date = util.fromisoformat(date)
-
-    #     for k in self.data:
-    #         setattr(hrt, k, row[self.data[k]])
-
-    #     return hrt
-
-    def get_all_symbols_as_hrt(self):
-        hrts = []
-        for f in self.get_stored_symbols():
-            symbol = f.split(".")[0]
-            with open(self.store_at + f) as jfile:
-                data = json.load(jfile)
-                if self.key in data:
-                    for k in data[self.key]:
-                        hrts.append(self.convert_to_hrt(symbol, k, data[self.key][k]))
-
-        return hrts
 
     def clean_data(self, symbol, date, row):
         data = {}

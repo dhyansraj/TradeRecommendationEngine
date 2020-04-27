@@ -28,7 +28,6 @@ def process_pixel(pixel):
 def get_as_pixel(tres):
     matrix = []
     for i, tre in enumerate(tres):
-        # print(tres[i]["_id"])
         matrix.append([tre.get("data" + str(j), 0.0) for j in range(0, PIXEL_WIDTH)])
 
     return np.array(matrix)
@@ -43,7 +42,7 @@ def get_symbol_as_pixels(tres):
         if i == 0:
             continue
 
-        if i + PIXEL_HEIGHT + 1 < len(tres):
+        if i + PIXEL_HEIGHT <= len(tres):
             c = tres[i].get("data3", 0.0)  # Current Day's closing rate
             n = tres[i - 1].get("data3", 0.0)  # Next Day's closing rate
 
@@ -77,9 +76,15 @@ def get_dataset():
     )
 
 
-# def get_dataset():
-#     for symbol in dao.get_symbols_list():
-#         return get_symbol_as_pixels(dao.get_records(symbol[0]))
+def get_symbol_data_for_today(symbol):
+    db_data = dao.get_records(symbol, PIXEL_HEIGHT)
+    symbol_data = np.zeros(shape=(1, PIXEL_HEIGHT, PIXEL_WIDTH))
+
+    symbol_data = np.append(
+        symbol_data, [process_pixel(get_as_pixel(db_data))], axis=0,
+    )
+
+    return np.delete(symbol_data, 0, axis=0), db_data[0].get("date")
 
 
 # np.set_printoptions(precision=5, suppress=True)
@@ -99,4 +104,13 @@ def get_dataset():
 # for d, l, p in zip(dates, labels, pixels):
 # print(d, l, p)
 
-get_dataset()
+# symbols, labels, dates = get_dataset()
+
+# symbols[0]
+# dates
+
+# get_as_pixel(dao.get_records("A", 30))
+
+# get_symbol_data_for_today("A")
+
+# dao.get_records("A", 30)
