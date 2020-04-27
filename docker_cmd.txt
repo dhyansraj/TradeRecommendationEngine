@@ -3,3 +3,5 @@ MySQL
 
 docker run --name trade-mysql --rm -v $(pwd)/datadir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=TRE -e MYSQL_USER=tre -e MYSQL_PASSWORD=admin -p 3306:3306 -d mysql:5.7
 
+docker run --name trade-mongo --rm -v $(pwd)/mongo/datadir:/data/db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin -p 27017:27017 -d mongo
+
