@@ -8,7 +8,7 @@ hd = db["historical_data"]
 def create_record(data):
     try:
         hd.insert_many(data)
-    except pymongo.errors.BulkWriteError:
+    except Exception:
         pass
 
 
