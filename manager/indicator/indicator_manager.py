@@ -30,7 +30,11 @@ class IndicatorManager:
 
         response = requests.get(url)
 
-        return json.loads(response.content.decode("utf-8"))
+        return (
+            "{}".content.decode("utf-8")
+            if not response
+            else json.loads(response.content.decode("utf-8"))
+        )
 
     def store(self, sym):
 
