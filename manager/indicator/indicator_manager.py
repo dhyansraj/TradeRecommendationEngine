@@ -32,7 +32,7 @@ class IndicatorManager:
 
         return (
             "{}".content.decode("utf-8")
-            if not response
+            if response in (None, "")
             else json.loads(response.content.decode("utf-8"))
         )
 
