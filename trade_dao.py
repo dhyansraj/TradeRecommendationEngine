@@ -1,6 +1,6 @@
 import pymongo
 
-mdb_client = pymongo.MongoClient("mongodb://admin:admin@localhost:27017/")
+mdb_client = pymongo.MongoClient("mongodb://admin:admin@10.128.0.2:27017/")
 db = mdb_client["tre_database"]
 hd = db["historical_data"]
 
