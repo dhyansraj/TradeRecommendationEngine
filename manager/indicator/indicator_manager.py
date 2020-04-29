@@ -5,6 +5,8 @@ import time
 import trade_dao as dao
 import os
 
+import logging
+
 
 class IndicatorManager:
     site = "https://www.alphavantage.co/query?"
@@ -26,8 +28,6 @@ class IndicatorManager:
 
         url = IndicatorManager.site + self.function + symbol + self.apiKey
 
-        print(url)
-
         response = requests.get(url)
 
         return (
@@ -44,7 +44,7 @@ class IndicatorManager:
             with open(self.store_at + sym + ".json", "w") as outfile:
                 json.dump(downloaded_data, outfile)
         else:
-            print(downloaded_data)
+            logging.error(downloaded_data)
 
     def get_stored_symbols(self):
         from os import listdir

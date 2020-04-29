@@ -7,18 +7,32 @@ import manager.indicator.rsi_manager as rsi_manager
 import manager.indicator.adx_manager as adx_manager
 import manager.indicator.cci_manager as cci_manager
 import manager.indicator.aroon_manager as aroon_manager
-import manager.indicator.bbands_manager as bbands_manager
+import manager.indicator.bbands_close_manager as bbands_close_manager
+import manager.indicator.bbands_open_manager as bbands_open_manager
+import manager.indicator.bbands_high_manager as bbands_high_manager
+import manager.indicator.bbands_low_manager as bbands_low_manager
+
 import manager.indicator.obv_manager as obv_manager
 
 import sys
-import time
+
+import logging
+
+logging.basicConfig(
+    filename="last_run.log",
+    format="%(name)s - %(levelname)s - %(message)s",
+    level=logging.NOTSET,
+)
 
 
 def store_all_symbols_on_disk():
     daily_rates_manager.store_all_symbols_on_disk()
     adx_manager.store_all_symbols_on_disk()
     aroon_manager.store_all_symbols_on_disk()
-    bbands_manager.store_all_symbols_on_disk()
+    bbands_close_manager.store_all_symbols_on_disk()
+    bbands_open_manager.store_all_symbols_on_disk()
+    bbands_high_manager.store_all_symbols_on_disk()
+    bbands_low_manager.store_all_symbols_on_disk()
     cci_manager.store_all_symbols_on_disk()
     sma_manager.store_all_symbols_on_disk()
     ema_manager.store_all_symbols_on_disk()
@@ -37,8 +51,14 @@ def store_all_symbols_on_db():
     adx_manager.store_all_symbols_on_db()
     print("aroon_manager.store_all_symbols_on_db()")
     aroon_manager.store_all_symbols_on_db()
-    print("bbands_manager.store_all_symbols_on_db()")
-    bbands_manager.store_all_symbols_on_db()
+    print("bbands_close_manager.store_all_symbols_on_db()")
+    bbands_close_manager.store_all_symbols_on_db()
+    print("bbands_open_manager.store_all_symbols_on_db()")
+    bbands_open_manager.store_all_symbols_on_db()
+    print("bbands_high_manager.store_all_symbols_on_db()")
+    bbands_high_manager.store_all_symbols_on_db()
+    print("bbands_low_manager.store_all_symbols_on_db()")
+    bbands_low_manager.store_all_symbols_on_db()
     print("cci_manager.store_all_symbols_on_db()")
     cci_manager.store_all_symbols_on_db()
     print("sma_manager.store_all_symbols_on_db()")
@@ -72,27 +92,36 @@ def main():
         aroon_manager.store_all_symbols_on_db()
 
     if indicator == 4:
-        bbands_manager.store_all_symbols_on_db()
+        bbands_close_manager.store_all_symbols_on_db()
 
     if indicator == 5:
-        cci_manager.store_all_symbols_on_db()
+        bbands_open_manager.store_all_symbols_on_db()
 
     if indicator == 6:
-        sma_manager.store_all_symbols_on_db()
+        bbands_high_manager.store_all_symbols_on_db()
 
     if indicator == 7:
-        ema_manager.store_all_symbols_on_db()
+        bbands_low_manager.store_all_symbols_on_db()
 
     if indicator == 8:
-        macd_manager.store_all_symbols_on_db()
+        cci_manager.store_all_symbols_on_db()
 
     if indicator == 9:
-        stoch_manager.store_all_symbols_on_db()
+        sma_manager.store_all_symbols_on_db()
 
     if indicator == 10:
-        obv_manager.store_all_symbols_on_db()
+        ema_manager.store_all_symbols_on_db()
 
     if indicator == 11:
+        macd_manager.store_all_symbols_on_db()
+
+    if indicator == 12:
+        stoch_manager.store_all_symbols_on_db()
+
+    if indicator == 13:
+        obv_manager.store_all_symbols_on_db()
+
+    if indicator == 14:
         rsi_manager.store_all_symbols_on_db()
 
 

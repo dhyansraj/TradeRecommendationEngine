@@ -28,10 +28,18 @@ def get_all_records():
     return list(hd.find())
 
 
-def get_records(symbol, limit=0):
+def get_records(symbol, limit=0, date=None):
     query = {"symbol": {"$eq": symbol}}
+
+    if date:
+        query["date"] = {"$lt": date}
     return list(hd.find(query).sort("date", -1).limit(limit))
 
 
 def get_symbols_list():
     return list(hd.find({}, {"symbol": 1}).distinct("symbol"))
+
+
+# len(get_records("AAPL", date="2020-01-17"))
+
+# get_symbols_list()

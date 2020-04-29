@@ -4,6 +4,25 @@ import numpy as np
 PIXEL_WIDTH = 30
 PIXEL_HEIGHT = 30
 
+MULTIPLIER = [1] * PIXEL_WIDTH
+MULTIPLIER[13] = 100
+MULTIPLIER[15] = 100
+MULTIPLIER[17] = 10000
+MULTIPLIER[18] = 100
+MULTIPLIER[19] = 100
+MULTIPLIER[20] = 10000
+MULTIPLIER[21] = 100
+MULTIPLIER[22] = 100
+MULTIPLIER[23] = 10000
+MULTIPLIER[24] = 100
+MULTIPLIER[25] = 100
+MULTIPLIER[26] = 10000
+MULTIPLIER[27] = 100
+MULTIPLIER[28] = 100
+MULTIPLIER[5] = 100
+MULTIPLIER[6] = 100
+MULTIPLIER[12] = 100
+
 
 def process_pixel(pixel):
 
@@ -20,7 +39,7 @@ def process_pixel(pixel):
             if p == 0:
                 pixel[i][j] = 0
             else:
-                pixel[i][j] = (c - p) / p
+                pixel[i][j] = ((c - p) / p) * MULTIPLIER[j]
 
     return [ele for ele in reversed(pixel)]
 
