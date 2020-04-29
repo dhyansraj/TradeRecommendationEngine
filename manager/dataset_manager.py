@@ -1,5 +1,6 @@
 import trade_dao as dao
 import numpy as np
+import concurrent.futures
 
 PIXEL_WIDTH = 30
 PIXEL_HEIGHT = 30
@@ -81,12 +82,15 @@ def get_dataset():
     all_labels = []
     all_dates = []
 
-    for symbol in dao.get_symbols_list():
-        pixel, labels, dates = get_symbol_as_pixels(dao.get_records(symbol))
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        symbol_data = map(dao.get_records, dao.get_symbols_list())
+        results = executor.map(get_symbol_as_pixels, symbol_data)
 
-        all_symbols = np.append(all_symbols, pixel, axis=0)
-        all_labels.extend(labels)
-        all_dates.extend(dates)
+        for (pixel, labels, dates) in results:
+
+            all_symbols = np.append(all_symbols, pixel, axis=0)
+            all_labels.extend(labels)
+            all_dates.extend(dates)
 
     return (
         np.flip(np.delete(all_symbols, 0, axis=0), axis=0),
