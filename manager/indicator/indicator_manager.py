@@ -4,6 +4,7 @@ import csv
 import time
 import trade_dao as dao
 import os
+from app_config import AppConfig
 
 import logging
 
@@ -45,6 +46,10 @@ class IndicatorManager:
                 json.dump(downloaded_data, outfile)
         else:
             logging.error(downloaded_data)
+
+    def get_sp500(self):
+        with open("nasdaqlisted.csv", newline="") as csvfile:
+            return [i["Symbol"] for i in csv.DictReader(csvfile, delimiter="|")]
 
     def get_stored_symbols(self):
         from os import listdir
@@ -103,31 +108,28 @@ class IndicatorManager:
                     print("Symbol ", sym, " already exists. Skiping.")
 
     def store_all_symbols_on_db_live(self, daily_rates=False):
-        with open("nasdaqlisted.csv", newline="") as csvfile:
-            reader = csv.DictReader(csvfile, delimiter="|")
-            i = 0
-            for row in reader:
-                sym = row["Symbol"]
+        i = 0
+        for sym in self.get_sp500():
 
-                self.store_all_symbols_on_db(
-                    self.get_symbol_data(self.download_data(sym), sym), daily_rates
-                )
-                i += 1
+            self.store_symbol_on_db(
+                self.get_symbol_data(self.download_data(sym), sym), daily_rates
+            )
+            i += 1
 
-                if i % 5 == 0:
-                    time.sleep(60)
+            if i % 5 == 0:
+                time.sleep(60)
 
-    def store_all_symbols_on_db(self, all_symbols, daily_rates=False):
+    def store_symbol_on_db(self, symbol_data, daily_rates=False):
 
         if daily_rates:
-            dao.create_record(all_symbols)
+            dao.create_record(symbol_data)
         else:
             existing_records = set([i["_id"] for i in dao.get_all_records()])
-            all_symbols = list(
-                filter(lambda x: x["_id"] in existing_records, all_symbols)
+            record_for_existing_dates = list(
+                filter(lambda x: x["_id"] in existing_records, symbol_data)
             )
-            for record in all_symbols:
-                dao.update_record(record)
+
+            list(map(dao.update_record, record_for_existing_dates))
 
 
 # store_all_symbols()
@@ -161,6 +163,9 @@ class IndicatorManager:
 #     data4="5. volume",
 # )
 
+# manager.store_all_symbols_on_db_live(True)
+
+
 # manager.store_all_symbols_on_db(manager.get_all_symbols_from_disk(), True)
 # manager.get_all_symbols_from_disk()[0]
 
@@ -187,4 +192,15 @@ class IndicatorManager:
 #     data16="Aroon Down",
 # )
 
-# manager.store_all_symbols_on_db(manager.get_all_symbols_from_disk())
+# manager.store_all_symbols_on_db_live()
+
+
+# print(l)
+# for row in reader:
+#     print(row)
+
+# IndicatorManager.get_sp500()
+
+# print("test")
+
+AppConfig.get("other.preprocessing_queue")

@@ -1,0 +1,8 @@
+mongo:
+    host: localhost
+    port: 27017
+    user: admin
+    passwd: admin
+    db: tre_database
+    document: historical_data
+

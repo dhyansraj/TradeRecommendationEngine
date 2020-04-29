@@ -74,7 +74,7 @@ def get_symbol_as_pixels(tres):
 
             all_dates.append(tres[i]["date"])
 
-    return np.delete(all_pixels, 0, axis=0), all_labels, all_dates
+    return np.delete(all_pixels, 0, axis=0).clip(min=0), all_labels, all_dates
 
 
 def get_dataset():
@@ -99,15 +99,15 @@ def get_dataset():
     )
 
 
-def get_symbol_data_for_today(symbol):
-    db_data = dao.get_records(symbol, PIXEL_HEIGHT)
-    symbol_data = np.zeros(shape=(1, PIXEL_HEIGHT, PIXEL_WIDTH))
+def get_symbol_data(symbol, date=None):
+    _record = dao.get_records(symbol, limit=PIXEL_HEIGHT, date=date)
+    _symbol_data = np.zeros(shape=(1, PIXEL_HEIGHT, PIXEL_WIDTH))
 
-    symbol_data = np.append(
-        symbol_data, [process_pixel(get_as_pixel(db_data))], axis=0,
+    _symbol_data = np.append(
+        _symbol_data, [process_pixel(get_as_pixel(_record))], axis=0,
     )
 
-    return np.delete(symbol_data, 0, axis=0), db_data[0].get("date")
+    return np.delete(_symbol_data, 0, axis=0).clip(min=0), _record[0].get("date")
 
 
 # np.set_printoptions(precision=5, suppress=True)
@@ -134,6 +134,6 @@ def get_symbol_data_for_today(symbol):
 
 # get_as_pixel(dao.get_records("A", 30))
 
-# get_symbol_data_for_today("A")
+# get_symbol_data("A")
 
 # dao.get_records("A", 30)

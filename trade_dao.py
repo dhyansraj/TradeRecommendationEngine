@@ -1,8 +1,11 @@
 import pymongo
+from app_config import AppConfig
 
-mdb_client = pymongo.MongoClient("mongodb://admin:admin@localhost:27017/")
-db = mdb_client["tre_database"]
-hd = db["historical_data"]
+db_url = f"mongodb://{AppConfig.get('mongo.user')}:{AppConfig.get('mongo.passwd')}@{AppConfig.get('mongo.host')}:{AppConfig.get('mongo.port')}/"
+
+mdb_client = pymongo.MongoClient(db_url)
+db = mdb_client[AppConfig.get("mongo.db")]
+hd = db[AppConfig.get("mongo.document")]
 
 
 def create_record(data):
@@ -43,3 +46,6 @@ def get_symbols_list():
 # len(get_records("AAPL", date="2020-01-17"))
 
 # get_symbols_list()
+
+
+# AppConfig.get("mongo.user")
