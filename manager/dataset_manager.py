@@ -45,6 +45,17 @@ def process_pixel(pixel):
     return [ele for ele in reversed(pixel)]
 
 
+def validate_pixel(func):
+    def wrapper(*args, **kwargs):
+        if len(args[0]) < PIXEL_HEIGHT:
+            return np.zeros(shape=(PIXEL_HEIGHT, PIXEL_WIDTH)).tolist()
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@validate_pixel
 def get_as_pixel(tres):
     matrix = []
     for i, tre in enumerate(tres):
@@ -134,6 +145,6 @@ def get_symbol_data(symbol, date=None):
 
 # get_as_pixel(dao.get_records("A", 30))
 
-# get_symbol_data("A")
+get_symbol_data("AAPL", "2020-04-27")
 
 # dao.get_records("A", 30)
