@@ -1,4 +1,4 @@
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 # TensorFlow and tf.keras
 import tensorflow as tf
 from tensorflow import keras
@@ -13,7 +13,7 @@ print(tf.__version__)
 #+RESULTS:
 : 2.2.0
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 fashion_mnist = keras.datasets.fashion_mnist
 
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -22,14 +22,14 @@ fashion_mnist = keras.datasets.fashion_mnist
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 #+END_SRC
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 train_images.shape
 
 #+END_SRC
@@ -37,35 +37,35 @@ train_images.shape
 #+RESULTS:
 | 60000 | 28 | 28 |
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 len(train_labels)
 #+END_SRC
 
 #+RESULTS:
 : 60000
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 train_labels
 #+END_SRC
 
 #+RESULTS:
 : array([9, 0, 0, ..., 3, 0, 5], dtype=uint8)
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 test_images.shape
 #+END_SRC
 
 #+RESULTS:
 | 10000 | 28 | 28 |
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 len(test_labels)
 #+END_SRC
 
 #+RESULTS:
 : 10000
 
-#+BEGIN_SRC jupyter-python :session py :async yes :file boot.png :exports both
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both :file boot.png
 plt.figure()
 plt.imshow(train_images[0])
 plt.colorbar()
@@ -73,12 +73,15 @@ plt.grid(False)
 plt.show()
 #+END_SRC
 
+#+RESULTS:
+[[file:boot.png]]
+
 [[file:boot.png]]
 
 
 
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 train_images = train_images / 255.0
 
 test_images = test_images / 255.0
@@ -101,7 +104,7 @@ plt.show()
 #+RESULTS:
 [[file:./.ob-jupyter/2efa23e60f6ae50bd4f5b90c15130223368d3c1c.png]]
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(28, 28)),
     keras.layers.Dense(128, activation='relu'),
@@ -111,7 +114,8 @@ model = keras.Sequential([
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
@@ -119,86 +123,87 @@ model.compile(optimizer='adam',
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 model.fit(train_images, train_labels, epochs=10)
 #+END_SRC
 
 #+RESULTS:
 :RESULTS:
-#+begin_src jupyter-python :session py :async yes
+#+begin_example
+Epoch 1/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.4981 - accuracy: 0.8235
+Epoch 2/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.3728 - accuracy: 0.8653
+Epoch 3/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.3366 - accuracy: 0.8774
+Epoch 4/10
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.3142 - accuracy: 0.8857
+Epoch 5/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.2940 - accuracy: 0.8920
+Epoch 6/10
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.2803 - accuracy: 0.8965
+Epoch 7/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.2687 - accuracy: 0.9003
+Epoch 8/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.2592 - accuracy: 0.9036
+Epoch 9/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.2474 - accuracy: 0.9081
+Epoch 10/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.2391 - accuracy: 0.9107
+#+end_example
+: <tensorflow.python.keras.callbacks.History at 0x7f8eb5b2d2d0>
+:END:
+
+#+begin_src jupyter-python :session py :async yes :exports both
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 
 print('\nTest accuracy:', test_acc)
 #+end_src
-#+begin_example
-Epoch 1/10
-1875/1875 [==============================] - 6s 3ms/step - loss: 0.4988 - accuracy: 0.8252
-Epoch 2/10
-1875/1875 [==============================] - 7s 4ms/step - loss: 0.3716 - accuracy: 0.8665
-Epoch 3/10
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.3342 - accuracy: 0.8775
-Epoch 4/10
-1875/1875 [==============================] - 6s 3ms/step - loss: 0.3118 - accuracy: 0.8857
-Epoch 5/10
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.2942 - accuracy: 0.8930
-Epoch 6/10
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.2792 - accuracy: 0.8954
-Epoch 7/10
-1875/1875 [==============================] - 5s 3ms/step - loss: 0.2678 - accuracy: 0.9007
-Epoch 8/10
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.2580 - accuracy: 0.9038
-Epoch 9/10
-1875/1875 [==============================] - 5s 3ms/step - loss: 0.2474 - accuracy: 0.9079
-Epoch 10/10
-1875/1875 [==============================] - 5s 3ms/step - loss: 0.2400 - accuracy: 0.9100
-#+end_example
-: <tensorflow.python.keras.callbacks.History at 0x7f055b291d50>
-:END:
+
 #+RESULTS:
 #+begin_example
-313/313 - 0s - loss: 0.3375 - accuracy: 0.8865
+313/313 - 0s - loss: 0.3411 - accuracy: 0.8823
 
-Test accuracy: 0.8865000009536743
+Test accuracy: 0.8823000192642212
 #+end_example
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 probability_model = tf.keras.Sequential([model, 
                                          tf.keras.layers.Softmax()])
 #+END_SRC
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 predictions = probability_model.predict(test_images)
 #+END_SRC
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 predictions[0]
 #+END_SRC
 
 #+RESULTS:
 :RESULTS:
-#+begin_example
-array([2.0607757e-07, 2.0250180e-11, 5.0016591e-09, 4.6238573e-12,
-       2.1950759e-09, 8.8162153e-05, 1.7332951e-08, 1.0410802e-02,
-       1.3674010e-09, 9.8950082e-01], dtype=float32)
-#+end_example
-#+begin_example
-array([1.6182407e-06, 1.6935209e-08, 1.5167578e-07, 1.0809893e-09,
-       1.5950768e-06, 2.4693175e-03, 3.7217157e-07, 4.3032942e-03,
-       2.0247848e-08, 9.9322367e-01], dtype=float32)
-#+end_example
-:END:
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+begin_src jupyter-python :session py :async yes :exports both
 np.argmax(predictions[0])
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 : 9
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+begin_example
+array([5.6590125e-06, 9.3256016e-09, 2.0917510e-08, 5.0390214e-10,
+       2.8108850e-08, 1.3128362e-04, 4.8639424e-07, 2.1444587e-02,
+       7.5852552e-07, 9.7841716e-01], dtype=float32)
+#+end_example
+:END:
+#+RESULTS:
+: 9
+
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 test_labels[0]
 #+END_SRC
 
@@ -206,14 +211,15 @@ test_labels[0]
 : 9
 
 #+NAME: family
-| Dhyan  | 39 | Male   |
-| Neethu | 35 | Female |
-| Ryan   |  6 | Male   |
-| Iryn   |  1 | Female |
+| Dad      | 39 | Male   |
+| Mom      | 35 | Female |
+| Son      |  6 | Male   |
+| Daughter |  1 | Female |
 
-#+BEGIN_SRC jupyter-python :session py :async yes :var tab=family
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both :var tab=family
 print(tab[0])
 #+END_SRC
         
 #+RESULTS:
-: ['Dhyan', 39, 'Male']
+: ['Dad', 39, 'Male']
+
