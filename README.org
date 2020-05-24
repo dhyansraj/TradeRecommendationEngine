@@ -73,7 +73,6 @@ plt.grid(False)
 plt.show()
 #+END_SRC
 
-#+RESULTS:
 [[file:boot.png]]
 
 
