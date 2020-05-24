@@ -65,7 +65,7 @@ len(test_labels)
 #+RESULTS:
 : 10000
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :file boot.png
 plt.figure()
 plt.imshow(train_images[0])
 plt.colorbar()
@@ -74,7 +74,7 @@ plt.show()
 #+END_SRC
 
 #+RESULTS:
-[[file:./.ob-jupyter/2d662a2626fabe8a6267a522ab25ff65061a0c8a.png]]
+[[file:boot.png]]
 
 
 
