@@ -65,7 +65,7 @@ len(test_labels)
 #+RESULTS:
 : 10000
 
-#+BEGIN_SRC jupyter-python :session py :async yes :file boot.png
+#+BEGIN_SRC jupyter-python :session py :async yes :file boot.png :exports both
 plt.figure()
 plt.imshow(train_images[0])
 plt.colorbar()
