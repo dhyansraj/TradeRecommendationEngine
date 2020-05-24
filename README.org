@@ -1,0 +1,220 @@
+#+BEGIN_SRC jupyter-python :session py :async yes
+# TensorFlow and tf.keras
+import tensorflow as tf
+from tensorflow import keras
+
+# Helper libraries
+import numpy as np
+import matplotlib.pyplot as plt
+
+print(tf.__version__)
+#+END_SRC
+
+#+RESULTS:
+: 2.2.0
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+fashion_mnist = keras.datasets.fashion_mnist
+
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+train_images.shape
+
+#+END_SRC
+
+#+RESULTS:
+| 60000 | 28 | 28 |
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+len(train_labels)
+#+END_SRC
+
+#+RESULTS:
+: 60000
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+train_labels
+#+END_SRC
+
+#+RESULTS:
+: array([9, 0, 0, ..., 3, 0, 5], dtype=uint8)
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+test_images.shape
+#+END_SRC
+
+#+RESULTS:
+| 10000 | 28 | 28 |
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+len(test_labels)
+#+END_SRC
+
+#+RESULTS:
+: 10000
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+plt.figure()
+plt.imshow(train_images[0])
+plt.colorbar()
+plt.grid(False)
+plt.show()
+#+END_SRC
+
+#+RESULTS:
+[[file:./.ob-jupyter/2d662a2626fabe8a6267a522ab25ff65061a0c8a.png]]
+
+
+
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+train_images = train_images / 255.0
+
+test_images = test_images / 255.0
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+plt.figure(figsize=(10,10))
+for i in range(25):
+    plt.subplot(5,5,i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.binary)
+    plt.xlabel(class_names[train_labels[i]])
+plt.show()
+#+END_SRC
+
+#+RESULTS:
+[[file:./.ob-jupyter/2efa23e60f6ae50bd4f5b90c15130223368d3c1c.png]]
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10)
+])
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+model.fit(train_images, train_labels, epochs=10)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+#+begin_src jupyter-python :session py :async yes
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+
+print('\nTest accuracy:', test_acc)
+#+end_src
+#+begin_example
+Epoch 1/10
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4988 - accuracy: 0.8252
+Epoch 2/10
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.3716 - accuracy: 0.8665
+Epoch 3/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.3342 - accuracy: 0.8775
+Epoch 4/10
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.3118 - accuracy: 0.8857
+Epoch 5/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.2942 - accuracy: 0.8930
+Epoch 6/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.2792 - accuracy: 0.8954
+Epoch 7/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.2678 - accuracy: 0.9007
+Epoch 8/10
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.2580 - accuracy: 0.9038
+Epoch 9/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.2474 - accuracy: 0.9079
+Epoch 10/10
+1875/1875 [==============================] - 5s 3ms/step - loss: 0.2400 - accuracy: 0.9100
+#+end_example
+: <tensorflow.python.keras.callbacks.History at 0x7f055b291d50>
+:END:
+#+RESULTS:
+#+begin_example
+313/313 - 0s - loss: 0.3375 - accuracy: 0.8865
+
+Test accuracy: 0.8865000009536743
+#+end_example
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+probability_model = tf.keras.Sequential([model, 
+                                         tf.keras.layers.Softmax()])
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+predictions = probability_model.predict(test_images)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+predictions[0]
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+#+begin_example
+array([2.0607757e-07, 2.0250180e-11, 5.0016591e-09, 4.6238573e-12,
+       2.1950759e-09, 8.8162153e-05, 1.7332951e-08, 1.0410802e-02,
+       1.3674010e-09, 9.8950082e-01], dtype=float32)
+#+end_example
+#+begin_example
+array([1.6182407e-06, 1.6935209e-08, 1.5167578e-07, 1.0809893e-09,
+       1.5950768e-06, 2.4693175e-03, 3.7217157e-07, 4.3032942e-03,
+       2.0247848e-08, 9.9322367e-01], dtype=float32)
+#+end_example
+:END:
+#+BEGIN_SRC jupyter-python :session py :async yes
+np.argmax(predictions[0])
+#+END_SRC
+
+#+RESULTS:
+: 9
+
+#+BEGIN_SRC jupyter-python :session py :async yes
+test_labels[0]
+#+END_SRC
+
+#+RESULTS:
+: 9
+
+#+NAME: family
+| Dhyan  | 39 | Male   |
+| Neethu | 35 | Female |
+| Ryan   |  6 | Male   |
+| Iryn   |  1 | Female |
+
+#+BEGIN_SRC jupyter-python :session py :async yes :var tab=family
+print(tab[0])
+#+END_SRC
+        
+#+RESULTS:
+: ['Dhyan', 39, 'Male']
