@@ -86,7 +86,7 @@ test_images = test_images / 255.0
 
 #+RESULTS:
 
-#+BEGIN_SRC jupyter-python :session py :async yes
+#+BEGIN_SRC jupyter-python :session py :async yes :exports both
 plt.figure(figsize=(10,10))
 for i in range(25):
     plt.subplot(5,5,i+1)
